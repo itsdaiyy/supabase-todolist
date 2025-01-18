@@ -108,7 +108,7 @@ function App() {
 
   return (
     <div className="pt-10">
-      <div className="container mx-auto px-6">
+      <div className="mx-auto max-w-[500px] rounded-md border p-10">
         <div className="grid gap-6">
           <InputTodo
             inputValue={todoContent}

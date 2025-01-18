@@ -10,12 +10,11 @@ function TodoList({
   saveEdit,
 }) {
   return (
-    <ul>
+    <ol className="ms-4 list-decimal">
       {todos.map(({ id, content }) => (
-        <li key={id} className="mb-2">
+        <li key={id} className="mb-4">
           {id !== editState.id && (
             <div className="flex items-center gap-4">
-              <span>{id}</span>
               <span> {content}</span>
               <div>
                 <Button
@@ -63,7 +62,7 @@ function TodoList({
           )}
         </li>
       ))}
-    </ul>
+    </ol>
   );
 }
 
