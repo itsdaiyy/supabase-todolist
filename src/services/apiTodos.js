@@ -2,7 +2,10 @@ import supabase from "./supabase";
 
 export async function getTodos() {
   try {
-    const { data: todos, error } = await supabase.from("todos").select("*");
+    const { data: todos, error } = await supabase
+      .from("todos")
+      .select("*")
+      .order("id", { ascending: true });
 
     if (error) {
       throw error;
