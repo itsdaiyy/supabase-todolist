@@ -10,21 +10,20 @@ const initState = {
   content: "",
 };
 
-const initTodos = Array.from({ length: 3 }, (_, i) => ({
-  id: crypto.randomUUID(),
-  content: `待辦事項 ${i + 1}`,
-}));
+// const initTodos = Array.from({ length: 3 }, (_, i) => ({
+//   id: crypto.randomUUID(),
+//   content: `待辦事項 ${i + 1}`,
+// }));
 
 function App() {
   const [todoContent, setTodoContent] = useState("");
-  const [todos, setTodos] = useState(initTodos);
+  const [todos, setTodos] = useState([]);
   const [editState, setEditState] = useState(initState);
 
   useEffect(() => {
     const fetchTodos = async () => {
       try {
         const data = await getTodos();
-        console.log(data);
         setTodos(data);
       } catch (error) {
         console.log(error);
@@ -65,31 +64,18 @@ function App() {
 
   async function saveEdit(id) {
     if (!editState.content) return;
-    const updatedTodo = { content: editState.content };
-    console.log(updatedTodo);
-    console.log(id);
+    const updatedTodo = { content: editState.content.trim() };
     try {
-      const res = await updateTodo(updatedTodo, id);
-      console.log(res);
-
-      // 更新前端的 todos 狀態，保留順序
-      setTodos((prevTodos) =>
-        prevTodos.map((todo) =>
-          todo.id === id ? { ...todo, ...updatedTodo } : todo,
-        ),
-      );
+      await updateTodo(updatedTodo, id);
+      const updatedTodos = await getTodos();
+      console.log("updatedTodos", updatedTodos);
+      setTodos(updatedTodos);
     } catch (err) {
       console.error("Error updating todo:", err);
     } finally {
       // 清空編輯狀態
       setEditState(initState);
     }
-
-    // const index = todos.findIndex((todo) => todo.id === id);
-    // const newTodos = [...todos];
-    // newTodos[index] = editState;
-    // setTodos(newTodos);
-    // setEditState(initState);
   }
 
   function deleteTodo(id) {
