@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { createTodo, getTodos, updateTodo } from "./services/apiTodos";
+import {
+  apiDeleteTodo,
+  apiCreateTodo,
+  apiGetTodos,
+  apiUpdateTodo,
+} from "./services/apiTodos";
 
 import InputTodo from "./components/InputTodo";
 import TodoList from "./components/TodoList";
@@ -22,12 +27,12 @@ function App() {
 
   useEffect(() => {
     const fetchTodos = async () => {
-      try {
-        const data = await getTodos();
-        setTodos(data);
-      } catch (error) {
-        console.log(error);
+      const res = await apiGetTodos();
+      if (res === null) {
+        console.log(`建立 todo 失敗，請稍候再嘗試`);
+        return;
       }
+      setTodos(res);
     };
     fetchTodos();
   }, []);
@@ -39,23 +44,29 @@ function App() {
   async function addNewTodo() {
     if (!todoContent) return;
     const newTodo = { content: todoContent };
-    try {
-      // 新增待辦事項
-      await createTodo(newTodo);
+    // 新增待辦事項
+    const res = await apiCreateTodo(newTodo);
 
-      // 獲取最新的待辦事項資料
-      const todos = await getTodos();
-      // 更新 todos 狀態
-      setTodos(todos);
-    } catch (err) {
-      console.error("Error adding new todo:", err);
-    } finally {
-      // 清空輸入框
-      setTodoContent("");
+    if (res === null) {
+      console.log(`建立 todo 失敗，請稍候再嘗試`);
+      return;
     }
+
+    // 獲取最新的待辦事項資料
+    const todos = await apiGetTodos();
+
+    if (todos === null) {
+      console.log(`刷新 todos 失敗，請稍候再嘗試`);
+      return;
+    }
+
+    // 更新 todos 狀態
+    setTodos(todos);
+    // 清空 input 資料
+    setTodoContent("");
   }
 
-  function editTodo(e) {
+  async function editTodo(e) {
     setEditState((todo) => ({
       ...todo,
       content: e.target.value,
@@ -65,22 +76,34 @@ function App() {
   async function saveEdit(id) {
     if (!editState.content) return;
     const updatedTodo = { content: editState.content.trim() };
-    try {
-      await updateTodo(updatedTodo, id);
-      const updatedTodos = await getTodos();
-      console.log("updatedTodos", updatedTodos);
-      setTodos(updatedTodos);
-    } catch (err) {
-      console.error("Error updating todo:", err);
-    } finally {
-      // 清空編輯狀態
-      setEditState(initState);
+
+    const res = await apiUpdateTodo(updatedTodo, id);
+
+    if (res === null) {
+      console.log("儲存 todo 失敗，請稍後再嘗試");
+      return;
     }
+    const updatedTodos = await apiGetTodos();
+
+    if (updatedTodos === null) {
+      console.log("刷新 todos 失敗，請稍後再嘗試");
+      return;
+    }
+    setTodos(updatedTodos);
+
+    // 清空編輯狀態
+    setEditState(initState);
   }
 
-  function deleteTodo(id) {
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
+  async function deleteTodo(id) {
+    console.log("deleteId", id);
+    const res = await apiDeleteTodo(id);
+    if (res === null) {
+      console.log(`刪除 id: ${id} - todo 失敗，請稍後再嘗試"`);
+      return;
+    }
+    const updatedTodos = await apiGetTodos();
+    setTodos(updatedTodos);
   }
 
   return (
