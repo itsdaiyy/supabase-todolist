@@ -15,6 +15,7 @@ function TodoList({
         <li key={id} className="mb-2">
           {id !== editState.id && (
             <div className="flex items-center gap-4">
+              <span>{id}</span>
               <span> {content}</span>
               <div>
                 <Button
