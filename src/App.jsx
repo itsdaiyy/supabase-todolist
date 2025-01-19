@@ -9,6 +9,7 @@ import {
 
 import InputTodo from "./components/InputTodo";
 import TodoList from "./components/TodoList";
+import AuthForm from "./components/AuthForm";
 
 const initState = {
   id: "",
@@ -107,7 +108,10 @@ function App() {
   }
 
   return (
-    <div className="pt-10">
+    <main className="pt-10">
+      <div className="mx-auto mb-10 max-w-[500px] rounded-md border p-10">
+        <AuthForm />
+      </div>
       <div className="mx-auto max-w-[500px] rounded-md border p-10">
         <div className="grid gap-6">
           <InputTodo
@@ -125,7 +129,7 @@ function App() {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
