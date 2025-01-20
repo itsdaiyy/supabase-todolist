@@ -6,21 +6,16 @@ import {
   apiGetTodos,
   apiUpdateTodo,
 } from "./services/apiTodos";
+import { getSession } from "./services/apiAuth";
 
 import InputTodo from "./components/InputTodo";
 import TodoList from "./components/TodoList";
 import AuthForm from "./components/AuthForm";
-import { getCurrentUser, getSession } from "./services/apiAuth";
 
 const initState = {
   id: "",
   content: "",
 };
-
-// const initTodos = Array.from({ length: 3 }, (_, i) => ({
-//   id: crypto.randomUUID(),
-//   content: `待辦事項 ${i + 1}`,
-// }));
 
 function App() {
   const [todoContent, setTodoContent] = useState("");
@@ -56,7 +51,7 @@ function App() {
 
   async function addNewTodo() {
     if (!todoContent) return;
-    const newTodo = { content: todoContent };
+    const newTodo = { content: todoContent, user_id: currentUser.id };
     // 新增待辦事項
     const res = await apiCreateTodo(newTodo);
 
