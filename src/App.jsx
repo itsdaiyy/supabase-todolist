@@ -10,6 +10,7 @@ import {
 import InputTodo from "./components/InputTodo";
 import TodoList from "./components/TodoList";
 import AuthForm from "./components/AuthForm";
+import { getCurrentUser, getSession } from "./services/apiAuth";
 
 const initState = {
   id: "",
@@ -25,16 +26,27 @@ function App() {
   const [todoContent, setTodoContent] = useState("");
   const [todos, setTodos] = useState([]);
   const [editState, setEditState] = useState(initState);
+  const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    const fetchUser = async () => {
+      const { data, error } = await getSession();
+      if (error) return;
+      console.log("App fetchUser res", data);
+      if (data.session) setCurrentUser(data.session.user);
+    };
+
+    fetchUser();
+
     const fetchTodos = async () => {
       const res = await apiGetTodos();
       if (res === null) {
-        console.log(`建立 todo 失敗，請稍候再嘗試`);
+        console.log(`取得 todo 失敗，請稍候再嘗試`);
         return;
       }
       setTodos(res);
     };
+
     fetchTodos();
   }, []);
 
@@ -110,7 +122,11 @@ function App() {
   return (
     <main className="pt-10">
       <div className="mx-auto mb-10 max-w-[500px] rounded-md border p-10">
-        <AuthForm />
+        <AuthForm
+          currentUser={currentUser}
+          setCurrentUser={setCurrentUser}
+          setTodos={setTodos}
+        />
       </div>
       <div className="mx-auto max-w-[500px] rounded-md border p-10">
         <div className="grid gap-6">

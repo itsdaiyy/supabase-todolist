@@ -2,14 +2,27 @@ import supabase from "./supabase";
 
 export async function apiGetTodos() {
   try {
-    const { data: todos, error } = await supabase
-      .from("todos")
-      .select("*")
-      .order("id", { ascending: true });
+    // const {
+    //   data: { session },
+    //   error: sessionError,
+    // } = await supabase.auth.getSession();
 
-    if (error) {
-      throw error;
-    }
+    // if (sessionError) throw sessionError;
+
+    // if (!session) {
+    //   console.log("No user logged in");
+    //   return [];
+    // }
+
+    // const userId = session.user.id;
+
+    const { data: todos, error: todosError } = await supabase
+      .from("todos")
+      .select("*");
+    // .eq("user_id", userId)
+    // .order("id", { ascending: true });
+
+    if (todosError) throw todosError;
     return todos;
   } catch (error) {
     console.error("Error fetching todos:", error);
