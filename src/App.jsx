@@ -25,9 +25,7 @@ function App() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data, error } = await getSession();
-      if (error) return;
-      console.log("App fetchUser res", data);
+      const data = await getSession();
       if (data.session) setCurrentUser(data.session.user);
     };
 
@@ -35,10 +33,6 @@ function App() {
 
     const fetchTodos = async () => {
       const res = await apiGetTodos();
-      if (res === null) {
-        console.log(`取得 todo 失敗，請稍候再嘗試`);
-        return;
-      }
       setTodos(res);
     };
 
@@ -98,22 +92,22 @@ function App() {
       return;
     }
     setTodos(updatedTodos);
-
-    // 清空編輯狀態
     setEditState(initState);
   }
 
   async function deleteTodo(id) {
-    console.log("deleteId", id);
-    const res = await apiDeleteTodo(id);
-    if (res === null) {
-      console.log(`刪除 id: ${id} - todo 失敗，請稍後再嘗試"`);
-      return;
+    try {
+      const res = await apiDeleteTodo(id);
+      if (res) {
+        console.log(`刪除 id: ${id} - todo 失敗，請稍後再嘗試`);
+        return;
+      }
+      const updatedTodos = await apiGetTodos();
+      setTodos(updatedTodos);
+    } catch (error) {
+      console.error("刪除 todo 時發生錯誤:", error);
     }
-    const updatedTodos = await apiGetTodos();
-    setTodos(updatedTodos);
   }
-
   return (
     <main className="pt-10">
       <div className="mx-auto mb-10 max-w-[500px] rounded-md border p-10">

@@ -1,5 +1,6 @@
-import { logout } from "@/services/apiAuth";
 import { Button } from "./ui/button";
+
+import { logout } from "@/services/apiAuth";
 import { apiGetTodos } from "@/services/apiTodos";
 
 function Logout({ user, setCurrentUser, setTodos }) {

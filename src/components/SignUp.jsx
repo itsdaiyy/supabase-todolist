@@ -11,6 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { signUp } from "@/services/apiAuth";
 
@@ -23,7 +24,7 @@ const formSchema = z.object({
   }),
 });
 
-function SignUp({ setCurrentUser, setTodos }) {
+function SignUp({ setCurrentUser }) {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,10 +34,7 @@ function SignUp({ setCurrentUser, setTodos }) {
   });
 
   async function onSubmit(data) {
-    console.log("Form Data:", data);
-
     const { user } = await signUp(data);
-    console.log("sign up ", user);
     setCurrentUser(user);
 
     form.reset();

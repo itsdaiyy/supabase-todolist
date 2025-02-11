@@ -55,9 +55,11 @@ export async function apiDeleteTodo(id) {
       .from("todos")
       .delete()
       .eq("id", Number(id));
+
     if (error) {
       throw error;
     }
+    return "success";
   } catch (error) {
     console.error("Error deleting todos:", error);
     return null;

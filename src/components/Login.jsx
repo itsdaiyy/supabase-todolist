@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { logIn } from "@/services/apiAuth";
+import { login } from "@/services/apiAuth";
 import { apiGetTodos } from "@/services/apiTodos";
 
 const formSchema = z.object({
@@ -35,13 +35,9 @@ function Login({ setCurrentUser, setTodos }) {
   });
 
   async function onSubmit(data) {
-    console.log("Form Data:", data);
-
-    const { user } = await logIn(data);
-    console.log("Login user:", user);
+    const { user } = await login(data);
 
     const todos = await apiGetTodos();
-    console.log("Login Todos", todos);
 
     setTodos(todos);
     setCurrentUser(user);

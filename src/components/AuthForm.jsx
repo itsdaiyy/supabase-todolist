@@ -1,8 +1,10 @@
 import { useState } from "react";
+
+import { Button } from "./ui/button";
+
 import Login from "./Login";
 import Logout from "./Logout";
 import SignUp from "./SignUp";
-import { Button } from "./ui/button";
 
 function AuthForm({ currentUser, setCurrentUser, setTodos }) {
   const isAuthenticated = currentUser?.role === "authenticated";
@@ -18,7 +20,11 @@ function AuthForm({ currentUser, setCurrentUser, setTodos }) {
         />
       ) : (
         <>
-          <Button onClick={() => setHasAccount(!hasAccount)} className="mb-6">
+          <Button
+            variant="outline"
+            onClick={() => setHasAccount(!hasAccount)}
+            className="mb-6"
+          >
             {hasAccount ? "註冊" : "登入"}
           </Button>
           {hasAccount ? (

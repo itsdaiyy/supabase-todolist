@@ -1,6 +1,6 @@
 import supabase from "./supabase";
 
-export async function logIn({ email, password }) {
+export async function login({ email, password }) {
   try {
     let { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -24,29 +24,12 @@ export async function getSession() {
 
     if (error) {
       console.log(error);
-      return { error: `取得 session 失敗` };
-    }
-    return { data, error };
-  } catch (error) {
-    console.log(error);
-    return { error: `取得 session 失敗` };
-  }
-}
-
-export async function getCurrentUser() {
-  try {
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError) {
-      console.log(userError);
       return;
     }
-    return { user, isAuthenticated: user?.role === "authenticated" };
+    return data;
   } catch (error) {
     console.log(error);
+    return;
   }
 }
 
@@ -75,9 +58,6 @@ export async function signUp({ email, password }) {
       console.log(error);
       return;
     }
-
-    console.log(data);
-
     return data;
   } catch (error) {
     console.log(error);
